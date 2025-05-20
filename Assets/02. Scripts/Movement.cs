@@ -14,21 +14,22 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W)) // 앞으로 가는 기능
+        // GetKeyDown, GetKeyUp => 1번 실행, GetKey => 연속실행
+        if (Input.GetKey(KeyCode.W)) // 앞으로 가는 기능
         {
             // Z축으로 1만큼 moveSpeed 값만큼 이동
             // position 위치, rotation 각도, scale 크기
             this.transform.position += Vector3.forward * moveSpeed * Time.deltaTime;
         }
-        if (Input.GetKeyDown(KeyCode.S)) // 뒤로 가는 기능
+        if (Input.GetKey(KeyCode.S)) // 뒤로 가는 기능
         {
             this.transform.position += Vector3.back * moveSpeed * Time.deltaTime;
         }
-        if (Input.GetKeyDown(KeyCode.A)) // 왼쪽으로 가는 기능
+        if (Input.GetKey(KeyCode.A)) // 왼쪽으로 가는 기능
         {
             this.transform.position += Vector3.left * moveSpeed * Time.deltaTime;
         }
-        if (Input.GetKeyDown(KeyCode.D)) // 오른쪽으로 가는 기능
+        if (Input.GetKey(KeyCode.D)) // 오른쪽으로 가는 기능
         {
             this.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
         }
