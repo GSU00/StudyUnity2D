@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 유니티 에디터에 있는 consloe view에 log를 테스트하기 위한 클래스
-public class StudyLog : MonoBehaviour
+public class Study_Log : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
