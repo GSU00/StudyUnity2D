@@ -5,6 +5,8 @@ public class Movement : MonoBehaviour
     // 유니티 에디터에서 변경 : 실시간으로 값을 바꿔가면서 테스트한 필요한 경우의 변수
     public float moveSpeed = 10f;
 
+    public static int coinCount = 0;
+
     void Update()
     {
 
@@ -48,7 +50,7 @@ public class Movement : MonoBehaviour
 
         Vector3 normalDir = dir.normalized; // 정규화과정 (-1 ~ 1) -> 단위벡터
         
-        Debug.Log($"현재 입력 : {normalDir}");
+        //Debug.Log($"현재 입력 : {normalDir}");
 
         transform.position += normalDir * moveSpeed * Time.deltaTime;
 

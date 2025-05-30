@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Monster
   - Ground
+  - Score10
+  - Score20
+  - Score30
+  - Score50
+  - GameOver
   layers:
   - Default
   - TransparentFX
