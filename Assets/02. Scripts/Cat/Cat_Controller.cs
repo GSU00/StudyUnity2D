@@ -8,7 +8,8 @@ public class Cat_Controller : MonoBehaviour
     private Rigidbody2D catRb;
     private Animator catAnim;
 
-    public float jumpPower = 7f;
+    public float jumpPower = 10f;
+    public float limitPower = 7f;
     public bool isGround = false;
     public int jumpCount = 0;
 
@@ -32,6 +33,9 @@ public class Cat_Controller : MonoBehaviour
             jumpCount++;
 
             soundManager.OnJumpSound();
+
+            if (catRb.linearVelocityY > limitPower) // 자연스러운 점프를 위한 속도 제한
+                catRb.linearVelocityY = limitPower;
         }
     }
 
