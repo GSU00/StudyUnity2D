@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Study_Loop : MonoBehaviour
+public class Study_Loop_While : MonoBehaviour
 {
     private int count = 0;
 
