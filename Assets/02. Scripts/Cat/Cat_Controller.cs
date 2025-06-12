@@ -1,10 +1,12 @@
 using UnityEngine;
 using Cat;
 using UnityEngine.Video;
+using System.Collections;
 
 public class Cat_Controller : MonoBehaviour
 {
     public Sound_Manager soundManager;
+    public Video_Manager videoManager;
 
     public GameObject gameOverUI;
     public GameObject fadeUI;
@@ -13,26 +15,31 @@ public class Cat_Controller : MonoBehaviour
     private Rigidbody2D catRb;
     private Animator catAnim;
 
-    public float jumpPower = 10f;
-    public float limitPower = 7f;
+    public float jumpPower = 20f;
+    public float limitPower = 10f;
     public bool isGround = false;
     public int jumpCount = 0;
 
-    public GameObject happyVideo;
-    public GameObject sadVideo;
-
-    void Start()
+    void Awake()
     {
         catRb = GetComponent<Rigidbody2D>();
         catAnim = GetComponent<Animator>();
+    }
+
+    void OnEnable()
+    {
+        transform.localPosition = Vector3.zero;
+        GetComponent<CircleCollider2D>().enabled = true;
+        soundManager.audioSource.mute = false;
     }
 
     void Update()
     {
         // 스페이스 키 입력, 2단 점프 방지
         //if (Input.GetKeyDown(KeyCode.Space) && isGround)
+
         // 스페이스 키 입력, 2단 점프까지만
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 5)
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < 10)
         {
             catAnim.SetTrigger("Jump");
             catAnim.SetBool("IsGround", false);
@@ -64,10 +71,11 @@ public class Cat_Controller : MonoBehaviour
             {
                 fadeUI.SetActive(true);
                 playUI.SetActive(false);
-                fadeUI.GetComponent<FadePanel>().OnFade(3f, Color.white);
+                fadeUI.GetComponent<FadePanel>().OnFade(3f, Color.white, true);
                 this.GetComponent<CircleCollider2D>().enabled = false;
 
-                Invoke("HappyVideo", 5f);
+                //Invoke("HappyVideo", 5f);
+                StartCoroutine(EndingRoutine(true));
             }
         }
     }
@@ -81,10 +89,11 @@ public class Cat_Controller : MonoBehaviour
             gameOverUI.SetActive(true); // 게임 오버 켜기
             fadeUI.SetActive(true); // 페이드 켜기
             playUI.SetActive(false);
-            fadeUI.GetComponent<FadePanel>().OnFade(3f, Color.black); // 페이드 실행
+            fadeUI.GetComponent<FadePanel>().OnFade(3f, Color.black, true); // 페이드 실행
             this.GetComponent<CircleCollider2D>().enabled = false;
 
-            Invoke("SadVideo", 5f);
+            //Invoke("SadVideo", 5f);
+            StartCoroutine(EndingRoutine(false));
         }
 
         if (other.gameObject.CompareTag("Ground"))
@@ -103,21 +112,42 @@ public class Cat_Controller : MonoBehaviour
         }
     }
 
-    private void HappyVideo()
+    IEnumerator EndingRoutine(bool isHappy)
     {
-        happyVideo.SetActive(true);
+        yield return new WaitForSeconds(3.5f); // 값만큼 대기
+
+        videoManager.VideoPlay(isHappy);
+        yield return new WaitForSeconds(1f);
+        // yield return new WaitUntil(()=> videoManager.vPlayer.isPlaying); //뒤에적힌 bool값이 true가 된때까지 대기
+
+        var newColor = isHappy ? Color.white : Color.black;
+        fadeUI.GetComponent<FadePanel>().OnFade(3f, newColor, false); // 페이드 실행
+
         fadeUI.SetActive(false);
         gameOverUI.SetActive(false);
+        soundManager.audioSource.Stop();
+        //soundManager.audioSource.mute = true;
 
-        soundManager.audioSource.mute = true;
+        Debug.Log("영상 재생 완료");
+
+        transform.parent.gameObject.SetActive(false); // PLAY 오브젝트 Off
     }
 
-    private void SadVideo()
-    {
-        sadVideo.SetActive(true);
-        fadeUI.SetActive(false);
-        gameOverUI.SetActive(false);
+    //private void HappyVideo()
+    //{
+    //    videoManager.VideoPlay(true);
+    //    fadeUI.SetActive(false);
+    //    gameOverUI.SetActive(false);
 
-        soundManager.audioSource.mute = true;
-    }
+    //    soundManager.audioSource.mute = true;
+    //}
+    
+    //private void SadVideo()
+    //{
+    //    videoManager.VideoPlay(false);
+    //    fadeUI.SetActive(false);
+    //    gameOverUI.SetActive(false);
+
+    //    soundManager.audioSource.mute = true;
+    //}
 }
