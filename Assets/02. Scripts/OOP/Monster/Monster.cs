@@ -1,22 +1,51 @@
 using UnityEngine;
 
-public abstract class Monster : MonoBehaviour, IDamageable
+public abstract class Monster : MonoBehaviour
 {
-    public float hp;
+    private SpriteRenderer sRanderer;
 
-    public abstract void SetHealth();
+    [SerializeField] protected float hp = 3f;
+    [SerializeField] protected float moveSpeed = 5f;
 
-    public void TakeDamage(float damage)
+    private int dir = 1;
+
+    public abstract void Init();
+
+    private void Start()
     {
-        Debug.Log($"{damage}만큼 피해를 입혔습니다.");
+        sRanderer = GetComponent<SpriteRenderer>();
 
-        hp -= damage;
-        if (hp <= 0)
-            Death();
+        Init();
+    }
+    void OnMouseDown()
+    {
+        Hit(1);
     }
 
-    public void Death()
+    private void Update()
     {
-        Debug.Log("몬스터 다운");
+        Move();
+    }
+
+    private void Move()
+    {
+        transform.position += Vector3.right * moveSpeed * dir * Time.deltaTime;
+
+        if (transform.position.x > 8 || transform.position.x < -8)
+        {
+            sRanderer.flipX = !sRanderer.flipX;
+            dir = -dir;
+        }
+    }
+
+    void Hit(float damage)
+    {
+        hp -= damage;
+
+        if (hp <= 0)
+        {
+            Debug.Log("몬스터 죽음");
+            Destroy(gameObject);
+        }
     }
 }
